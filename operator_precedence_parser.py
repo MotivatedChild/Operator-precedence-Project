@@ -476,6 +476,15 @@ class App:
                                    highlightbackground=self.BORDER)
         self.result_lbl.pack(fill="x", pady=(4, 0))
 
+        self._sep(p, "④ Developed By")
+        self.credit_box = tk.Frame(p, bg=self.PANEL,
+                       highlightthickness=1,
+                       highlightbackground=self.BORDER)
+        self.credit_box.pack(fill="x", pady=(4, 0))
+        tk.Label(self.credit_box, text="Developed by:\nMuhammad Isbah\nChahat Fatima",
+             font=self.F_LABEL, bg=self.PANEL, fg=self.TEXT,
+             justify="center", pady=14).pack(fill="x")
+
         self.log_box = tk.Text(p, height=5, font=self.F_SMALL,
                                state="disabled", padx=6, pady=4,
                                **self._entry_style())
