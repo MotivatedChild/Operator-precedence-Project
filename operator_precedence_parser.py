@@ -370,7 +370,7 @@ class App:
     # ── Palette ───────────────────────────────────────────────
     BG        = "#1a1d2e"
     PANEL     = "#252840"
-    ACCENT    = "#7c6af7"
+    ACCENT    = "#ff8a3d"
     ACCENT2   = "#50e3c2"
     TEXT      = "#e8e8f0"
     TEXT_DIM  = "#8a8aa8"
