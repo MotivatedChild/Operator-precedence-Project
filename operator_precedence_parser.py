@@ -389,7 +389,7 @@ class App:
 
     def __init__(self, root):
         self.root = root
-        root.title("Operator Precedence Parser — CS3510")
+        root.title("Operator Precedence Parser")
         root.configure(bg=self.BG)
         root.geometry("1180x800")
         root.minsize(920, 620)
@@ -404,8 +404,8 @@ class App:
         hdr.pack(fill="x", padx=24)
         tk.Label(hdr, text="⊢  Operator Precedence Parser",
                  font=self.F_TITLE, bg=self.BG, fg=self.ACCENT).pack(side="left")
-        tk.Label(hdr, text="CS3510 · Compiler Construction",
-                 font=self.F_SMALL, bg=self.BG, fg=self.TEXT_DIM).pack(side="right")
+        tk.Label(hdr, text="Compiler Construction",
+             font=self.F_SMALL, bg=self.BG, fg=self.TEXT_DIM).pack(side="right")
 
         tk.Frame(self.root, bg=self.BORDER, height=1).pack(fill="x", padx=24)
 
