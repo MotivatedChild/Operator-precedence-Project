@@ -9,9 +9,56 @@ Modules:
   4. GUI Layer
 """
 
-import tkinter as tk
-from tkinter import ttk, messagebox, scrolledtext
+import os
 import re
+import tkinter as tk
+from tkinter import filedialog, messagebox, scrolledtext, ttk
+
+
+def extract_cfg_and_input_from_text(content):
+    """Extract grammar and input text from a user-supplied .txt file."""
+    if not content:
+        return "", ""
+
+    lines = [line.strip() for line in content.splitlines() if line.strip()]
+    if not lines:
+        return "", ""
+
+    grammar_lines, input_lines = [], []
+    section = "grammar"
+
+    for line in lines:
+        lowered = line.lower()
+        if lowered.startswith("grammar") and ":" in line:
+            section = "grammar"
+            continue
+        if lowered.startswith("input") and ":" in line:
+            section = "input"
+            continue
+
+        if section == "input":
+            input_lines.append(line)
+        else:
+            if "->" in line or "|" in line:
+                grammar_lines.append(line)
+            else:
+                input_lines.append(line)
+
+    if grammar_lines:
+        grammar = "\n".join(grammar_lines).strip()
+    else:
+        grammar = "\n".join(lines).strip()
+
+    input_text = " ".join(input_lines).strip()
+
+    if not grammar_lines and "\n\n" in content:
+        parts = [part.strip() for part in re.split(r"\n\s*\n", content, maxsplit=1)]
+        if len(parts) == 2:
+            grammar = parts[0].strip()
+            input_text = parts[1].strip()
+
+    return grammar, input_text
+
 
 # ══════════════════════════════════════════════════════════════
 #  MODULE 1 — CFG PARSER / READER
@@ -462,6 +509,10 @@ class App:
                   activebackground="#6255d4", activeforeground="white",
                   relief="flat", cursor="hand2",
                   command=self._run).pack(fill="x", ipady=10, pady=(4, 0))
+        tk.Button(p, text="📂   Load .txt",
+                  font=self.F_SMALL, bg=self.PANEL, fg=self.TEXT_DIM,
+                  activebackground=self.BORDER, relief="flat", cursor="hand2",
+                  command=self._load_cfg_from_file).pack(fill="x", ipady=4, pady=(6, 0))
         tk.Button(p, text="✕   Clear",
                   font=self.F_SMALL, bg=self.PANEL, fg=self.TEXT_DIM,
                   activebackground=self.BORDER, relief="flat", cursor="hand2",
@@ -618,6 +669,30 @@ class App:
         self.log_box.insert("end", msg + "\n")
         self.log_box.see("end")
         self.log_box.configure(state="disabled")
+
+    def _load_cfg_from_file(self):
+        file_path = filedialog.askopenfilename(
+            title="Open CFG text file",
+            filetypes=[("Text files", "*.txt"), ("All files", "*.*")],
+        )
+        if not file_path:
+            return
+
+        try:
+            with open(file_path, "r", encoding="utf-8") as fh:
+                content = fh.read()
+        except Exception as exc:
+            messagebox.showerror("File Error", f"Could not read file:\n{exc}")
+            return
+
+        grammar_text, input_text = extract_cfg_and_input_from_text(content)
+        if grammar_text:
+            self.cfg_text.delete("1.0", "end")
+            self.cfg_text.insert("1.0", grammar_text)
+        if input_text:
+            self.input_var.set(input_text)
+
+        self._log(f"Loaded grammar from {os.path.basename(file_path)}")
 
     def _clear(self):
         self.tree.delete(*self.tree.get_children())
