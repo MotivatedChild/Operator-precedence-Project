@@ -11,7 +11,6 @@ A simple compiler-construction project that implements an operator precedence pa
 
 ## Project Files
 - `operator_precedence_parser.py` — main application
-- `test_operator_precedence_parser.py` — unit tests for file-based grammar extraction
 
 ## How to Run
 Run the application with:
